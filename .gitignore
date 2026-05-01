@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Pytest and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Credentials and Keys
+credentials/
+*.json
+google-sheets-api.json
+
+# Data
+data/
+*.csv
+products.csv
