@@ -7,7 +7,7 @@ license = { text = "MIT" }
 requires-python = ">=3.11,<3.13"
 dependencies = [
     "beautifulsoup4==4.12.2",
-    "google-auth==2.27.0",
+    "google-auth==2.62.2",
     "gspread==6.0.0",
     "pandas==2.2.0",
     "psycopg2-binary==2.9.9",
