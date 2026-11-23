@@ -59,6 +59,25 @@ def _load_to_sinks(
     return results
 
 
+def _build_pipeline_summary(
+    status: str,
+    extracted_rows: int,
+    cleaned_rows: int,
+    sinks: dict[str, bool],
+    health_report: dict[str, Any],
+    error_handler: PipelineErrorHandler,
+) -> dict[str, Any]:
+    """Assemble a consistent structured summary payload for a pipeline run."""
+    return {
+        "status": status,
+        "extracted_rows": extracted_rows,
+        "cleaned_rows": cleaned_rows,
+        "sinks": sinks,
+        "health": health_report,
+        "errors": error_handler.summary(),
+    }
+
+
 def run_pipeline(
     config: Optional[PipelineConfig] = None,
     *,
@@ -84,7 +103,6 @@ def run_pipeline(
 
     logger.info("Starting ETL pipeline for source=%s", active_config.base_url)
     health_report = check_pipeline_health(active_config)
-
     raw_df = scrape_fashion_data(
         base_url=active_config.base_url,
         max_pages=active_config.max_pages,
@@ -96,14 +114,8 @@ def run_pipeline(
 
     if clean_df is None or clean_df.empty:
         logger.warning("Pipeline stopped because transformed dataset is empty.")
-        return {
-            "status": "empty",
-            "extracted_rows": len(raw_df),
-            "cleaned_rows": 0,
-            "sinks": {"csv": False, "google_sheets": False, "postgresql": False},
-            "health": health_report,
-            "errors": error_handler.summary(),
-        }
+        empty_sinks = {"csv": False, "google_sheets": False, "postgresql": False}
+        return _build_pipeline_summary("empty", len(raw_df), 0, empty_sinks, health_report, error_handler)
 
     sink_results = _load_to_sinks(
         clean_df,
@@ -113,14 +125,7 @@ def run_pipeline(
         skip_postgresql=skip_postgresql,
     )
     logger.info("ETL pipeline completed: cleaned_rows=%d sinks=%s", len(clean_df), sink_results)
-    return {
-        "status": "completed",
-        "extracted_rows": len(raw_df),
-        "cleaned_rows": len(clean_df),
-        "sinks": sink_results,
-        "health": health_report,
-        "errors": error_handler.summary(),
-    }
+    return _build_pipeline_summary("completed", len(raw_df), len(clean_df), sink_results, health_report, error_handler)
 
 
 def _build_arg_parser() -> argparse.ArgumentParser:
