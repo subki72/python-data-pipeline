@@ -1,0 +1,58 @@
+[project]
+name = "python-data-pipeline"
+version = "1.0.0"
+description = "Production-ready automated ETL pipeline scraping fashion catalog data to CSV, Google Sheets, and PostgreSQL."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "beautifulsoup4==4.12.2",
+    "google-auth==2.27.0",
+    "gspread==6.0.0",
+    "pandas==2.2.0",
+    "psycopg2-binary==2.9.9",
+    "python-dotenv==1.0.1",
+    "requests==2.31.0",
+    "SQLAlchemy==2.0.25",
+]
+
+[project.optional-dependencies]
+dev = [
+    "flake8==7.1.1",
+    "mypy==1.13.0",
+    "pytest==7.4.0",
+    "pytest-cov==4.1.0",
+    "ruff==0.8.0",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "B"]
+ignore = []
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+fail_under = 80
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
