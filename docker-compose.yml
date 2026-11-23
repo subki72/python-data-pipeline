@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: fashion-etl-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-etl_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-placeholder_dev_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-fashion_etl}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-etl_user} -d ${POSTGRES_DB:-fashion_etl}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fashion-etl-pipeline
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      BASE_URL: ${BASE_URL:-https://fashion-studio.dicoding.dev}
+      MAX_PAGES: ${MAX_PAGES:-50}
+      OUTPUT_CSV_PATH: /app/data/products.csv
+      GOOGLE_CREDS_PATH: /app/credentials/google-sheets-api.json
+      SPREADSHEET_NAME: ${SPREADSHEET_NAME:-ETL-Submission-Project}
+      DB_URL: postgresql://${POSTGRES_USER:-etl_user}:${POSTGRES_PASSWORD:-placeholder_dev_pass}@postgres:5432/${POSTGRES_DB:-fashion_etl}
+      DB_TABLE: ${DB_TABLE:-fashion_products}
+      REQUEST_TIMEOUT: ${REQUEST_TIMEOUT:-10}
+      MAX_RETRIES: ${MAX_RETRIES:-3}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - ./data:/app/data
+      - ./credentials:/app/credentials:ro
+
+volumes:
+  postgres_data:
