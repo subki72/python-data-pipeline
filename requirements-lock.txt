@@ -85,7 +85,7 @@ soupsieve==4.1.3 ; python_full_version >= '3.11.5'
     # via beautifulsoup4
 sqlalchemy==2.0.25
     # via python-data-pipeline
-strenum==0.4.15
+strenum==0.5.0
     # via gspread
 typing-extensions==4.16.0
     # via
