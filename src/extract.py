@@ -150,7 +150,7 @@ def _execute_get(
         else requests.get(url, timeout=timeout)
     )
     response.raise_for_status()
-    return response.content
+    return bytes(response.content)
 
 
 def _sleep_exponential_backoff(attempt: int, backoff_factor: float) -> None:
