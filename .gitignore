@@ -1,27 +1,39 @@
-# Python
+# Python byte-compiled and build artifacts
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
 
-# Environments
-.env
+# Virtual environments
+.venv/
 .venv
-env/
 venv/
+env/
 ENV/
 
-# Pytest and coverage
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Credentials and keys
+credentials/
+google-sheets-api.json
+*.pem
+*.key
+
+# Testing, coverage, and linter caches
 .pytest_cache/
 .coverage
+.coverage.*
+coverage.xml
 htmlcov/
+.ruff_cache/
+.mypy_cache/
 
-# Credentials and Keys
-credentials/
-*.json
-google-sheets-api.json
-
-# Data
+# Generated pipeline data
 data/
 *.csv
 products.csv
