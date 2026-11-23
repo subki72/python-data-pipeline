@@ -55,7 +55,7 @@ pyasn1-modules==0.4.2
     # via google-auth
 pycodestyle==2.12.1
     # via flake8
-pyflakes==3.2.0
+pyflakes==3.4.0
     # via flake8
 pytest==7.4.0
     # via
