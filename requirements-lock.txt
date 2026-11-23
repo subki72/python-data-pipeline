@@ -45,7 +45,7 @@ pandas==2.2.0
     # via python-data-pipeline
 pluggy==1.7.0
     # via pytest
-psycopg2-binary==2.9.9
+psycopg2-binary==2.9.13
     # via python-data-pipeline
 pyasn1==0.6.5
     # via
